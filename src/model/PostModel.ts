@@ -6,7 +6,9 @@ import sequelizeConnection from "../db";
 class Post_Table extends Model<IPost> {}
 
 Post_Table.belongsTo(User_Table, {
-  foreignKey: "userId",
+  foreignKey: {
+    name: "userId",
+  },
 });
 
 Post_Table.init(

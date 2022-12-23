@@ -4,6 +4,7 @@ import logger from "morgan";
 import helmet from "helmet";
 
 import routes from "./routes/routes";
+import errorMiddleware from "./middleware/errorMiddleware";
 
 dotenv.config();
 
@@ -14,12 +15,18 @@ class App {
     this.server = express();
     this.middlewares();
     this.routes();
+    this.initializeErrorhandler();
   }
 
   middlewares() {
     this.server.use(express.json());
+    this.server.use(express.urlencoded({ extended: false }));
     this.server.use(logger("dev"));
     this.server.use(helmet());
+  }
+
+  private initializeErrorhandler() {
+    this.server.use(errorMiddleware);
   }
 
   routes() {
