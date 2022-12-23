@@ -8,3 +8,12 @@ export interface IUser {
   password: string;
   updatedAt: Date;
 }
+
+export interface IPost {
+  Topic: string;
+  image: string;
+  viewCount: number;
+  Body: string;
+  like: string;
+  retweet: string;
+}
