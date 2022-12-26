@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import logger from "morgan";
 import helmet from "helmet";
 
-import routes from "./routes/routes";
+import authroutes from "./routes/routes";
 import errorMiddleware from "./middleware/errorMiddleware";
 
 dotenv.config();
@@ -30,7 +30,7 @@ class App {
   }
 
   routes() {
-    this.server.use(routes);
+    this.server.use("/api/auth", authroutes);
   }
 }
 

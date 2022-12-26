@@ -1,11 +1,16 @@
+enum User_Role {
+  User = "User",
+  Admin = "Admin",
+}
+
 export interface IUser {
-  id: string;
+  id?: string;
   Name: string;
   PhoneNumber: string;
-  role: string;
+  role: User_Role;
   Email: string;
   createdAt: Date;
-  password: string;
+  Password: string;
   updatedAt: Date;
 }
 
