@@ -24,7 +24,7 @@ export const createNewUser = async (
     const hashedPassword = await hashPassword(Password);
 
     const newUser = await User_Table.create({
-      Name: Name,
+      Name: Name.trim(),
       PhoneNumber: PhoneNumber,
       Email: Email,
       Password: hashedPassword,
@@ -34,6 +34,6 @@ export const createNewUser = async (
     res.status(200).send({ data: newUser });
     console.log(newUser);
   } catch (error) {
-    next(error);
+    next(error.message);
   }
 };
