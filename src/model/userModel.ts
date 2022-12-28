@@ -58,7 +58,7 @@ User_Table.init(
     updatedAt: DataTypes.DATE,
   },
   {
-    indexes: [{ unique: true, fields: ["Email"] }],
+    // indexes: [{ unique: true, fields: ["Email"] }],
     timestamps: true,
     sequelize: sequelizeConnection,
     tableName: "Users",
