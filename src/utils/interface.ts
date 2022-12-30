@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 export enum User_Role {
   User = "User",
   Admin = "Admin",
@@ -21,4 +23,8 @@ export interface IPost {
   Body: string;
   like: string;
   retweet: string;
+}
+
+export interface IGetUserAuthInfoRequest extends Request {
+  user: IUser;
 }
