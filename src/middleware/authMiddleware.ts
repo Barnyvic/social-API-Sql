@@ -11,9 +11,10 @@ export const authMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
+  let token;
   try {
     if (req.headers && req.headers.authorization) {
-      const token = req.headers.authorization.split(" ")[1];
+      token = req.headers.authorization.split(" ")[1];
       const decoded: any = await decodeToken(token);
       const user = await User_Table.findOne({ where: { id: decoded?.id } });
 
@@ -25,7 +26,13 @@ export const authMiddleware = async (
       console.log(req.user);
 
       return next();
-    }
+    } else if (!token)
+      return next(
+        new ErrorException(
+          ErrorCode.NotFound,
+          "No token pls register and login"
+        )
+      );
   } catch (error) {
     next(new ErrorException(ErrorCode.INTERNAL_SERVER_ERROR, error.message));
   }

@@ -17,12 +17,15 @@ export interface IUser {
 }
 
 export interface IPost {
+  id?: string;
   Topic: string;
   image: string;
   viewCount: number;
   Body: string;
   like: string;
   retweet: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IGetUserAuthInfoRequest extends Request {

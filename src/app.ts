@@ -4,6 +4,7 @@ import logger from "morgan";
 import helmet from "helmet";
 
 import authroutes from "./routes/routes";
+import postRouter from "./routes/postroutes";
 import errorMiddleware from "./middleware/errorMiddleware";
 
 dotenv.config();
@@ -31,6 +32,7 @@ class App {
 
   routes() {
     this.server.use("/api/auth", authroutes);
+    this.server.use("/api/post", postRouter);
   }
 }
 
