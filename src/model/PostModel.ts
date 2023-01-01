@@ -1,17 +1,14 @@
-import { Model, DataTypes, Optional } from "sequelize";
+import { Model, DataTypes, Optional, ForeignKey } from "sequelize";
 import { IPost } from "../utils/interface";
 import User_Table from "./userModel";
 import sequelizeConnection from "../db";
 
 type PostCreationAttributes = Optional<IPost, "id">;
 
-class Post_Table extends Model<IPost, PostCreationAttributes> {}
-
-// Post_Table.belongsTo(User_Table, {
-//   foreignKey: {
-//     name: "userId",
-//   },
-// });
+class Post_Table extends Model<IPost, PostCreationAttributes> {
+  id: number;
+  userId: ForeignKey<User_Table["dataValues"]["id"]>;
+}
 
 Post_Table.init(
   {
@@ -45,12 +42,23 @@ Post_Table.init(
       allowNull: true,
       type: DataTypes.STRING,
     },
+    // UserID: {
+    //   type: DataTypes.INTEGER,
+    //   unique: true,
+    // },
     // Timestamps
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },
-  { timestamps: true, sequelize: sequelizeConnection, paranoid: true }
+  {
+    timestamps: true,
+    tableName: "Posts",
+    sequelize: sequelizeConnection,
+    paranoid: true,
+  }
 );
+
+Post_Table.belongsTo(User_Table);
 
 Post_Table.sync();
 

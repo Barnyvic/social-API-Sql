@@ -13,4 +13,13 @@ const sequelizeConnection = new Sequelize(dbName, dbUser, dbPassword, {
   dialect: dbDriver,
 });
 
+sequelizeConnection
+  .authenticate()
+  .then(() => {
+    console.log("databese is connected.....");
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
 export default sequelizeConnection;

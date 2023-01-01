@@ -2,6 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 
 import sequelizeConnection from "../db/index";
 import { IUser } from "../utils/interface";
+import Post_Table from "./PostModel";
 
 type UserCreationAttributes = Optional<IUser, "id">;
 
@@ -64,6 +65,8 @@ User_Table.init(
     tableName: "Users",
   }
 );
+
+// User_Table.hasMany(Post_Table);
 
 // This method will create model if the model does not exist, however, if already exist it would overwrite it.
 User_Table.sync();

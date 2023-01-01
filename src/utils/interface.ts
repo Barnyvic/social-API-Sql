@@ -26,6 +26,7 @@ export interface IPost {
   retweet: string;
   createdAt: Date;
   updatedAt: Date;
+  // UserID: number;
 }
 
 export interface IGetUserAuthInfoRequest extends Request {
