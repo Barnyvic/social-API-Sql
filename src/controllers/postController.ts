@@ -56,7 +56,6 @@ export const viewAllPost = async (
       include: { model: USERS, attributes: ["Name", "PhoneNumber"] },
       order: [["createdAt", "DESC"]],
     });
-    console.log(post);
 
     return successResponse(res, 200, "Success", post);
   } catch (error) {
