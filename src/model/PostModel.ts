@@ -1,65 +1,53 @@
-import { Model, DataTypes, Optional, ForeignKey } from "sequelize";
+import { Model, DataTypes } from "sequelize";
+
 import { IPost } from "../utils/interface";
-import User_Table from "./userModel";
 import sequelizeConnection from "../db";
+import USERS from "./userModel";
 
-type PostCreationAttributes = Optional<IPost, "id">;
-
-class Post_Table extends Model<IPost, PostCreationAttributes> {
-  id: number;
-  userId: ForeignKey<User_Table["dataValues"]["id"]>;
+class POST extends Model<IPost> {
+  static associate(model: any) {
+    POST.belongsTo(model.USERS);
+  }
 }
 
-Post_Table.init(
+POST.init(
   {
     id: {
-      primaryKey: true,
       type: DataTypes.INTEGER,
-      allowNull: true,
       autoIncrement: true,
+      primaryKey: true,
+      unique: true,
+      allowNull: false,
     },
     Topic: {
+      type: DataTypes.STRING,
       allowNull: false,
-      type: DataTypes.STRING,
     },
-    image: {
-      allowNull: true,
+    Image: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     Body: {
-      allowNull: false,
       type: DataTypes.STRING,
+      allowNull: false,
     },
-    viewCount: {
+    view_Count: {
+      type: DataTypes.INTEGER,
       allowNull: true,
-      type: DataTypes.NUMBER,
+      defaultValue: 0,
     },
     like: {
-      allowNull: true,
       type: DataTypes.STRING,
-    },
-    retweet: {
       allowNull: true,
-      type: DataTypes.STRING,
     },
-    // UserID: {
-    //   type: DataTypes.INTEGER,
-    //   unique: true,
-    // },
-    // Timestamps
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE,
   },
   {
     timestamps: true,
-    tableName: "Posts",
     sequelize: sequelizeConnection,
-    paranoid: true,
+    tableName: "Posts",
   }
 );
 
-Post_Table.belongsTo(User_Table);
+POST.sync();
 
-Post_Table.sync();
-
-export default Post_Table;
+export default POST;

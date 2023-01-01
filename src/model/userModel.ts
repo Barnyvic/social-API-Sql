@@ -1,14 +1,29 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import {
+  DataTypes,
+  Model,
+  Optional,
+  HasManyCreateAssociationMixin,
+  Association,
+} from "sequelize";
 
 import sequelizeConnection from "../db/index";
 import { IUser } from "../utils/interface";
-import Post_Table from "./PostModel";
+import POST from "./PostModel";
 
 type UserCreationAttributes = Optional<IUser, "id">;
 
-class User_Table extends Model<IUser, UserCreationAttributes> {}
+class USERS extends Model<IUser, UserCreationAttributes> {
+  declare createProject: HasManyCreateAssociationMixin<POST, "id">;
 
-User_Table.init(
+  static associate(models: any) {
+    USERS.hasMany(models.POST, {
+      sourceKey: "id",
+      foreignKey: "userId",
+    });
+  }
+}
+
+USERS.init(
   {
     id: {
       primaryKey: true,
@@ -66,9 +81,7 @@ User_Table.init(
   }
 );
 
-// User_Table.hasMany(Post_Table);
-
 // This method will create model if the model does not exist, however, if already exist it would overwrite it.
-User_Table.sync();
+USERS.sync();
 
-export default User_Table;
+export default USERS;

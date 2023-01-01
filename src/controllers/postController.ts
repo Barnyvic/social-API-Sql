@@ -27,11 +27,11 @@ export const createPost = async (
       );
 
     const post = Post_Table.create({
-      //   Topic: Topic,
-      //   Body: Body,
+      Topic: Topic,
+      Body: Body,
     });
 
-    return successResponse(res, 200, "user logged in successfully", {
+    return successResponse(res, 200, "Success", {
       post,
     });
   } catch (error) {

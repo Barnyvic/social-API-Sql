@@ -23,8 +23,6 @@ export const authMiddleware = async (
 
       req.user = user.dataValues;
 
-      console.log(req.user);
-
       return next();
     } else if (!token)
       return next(
