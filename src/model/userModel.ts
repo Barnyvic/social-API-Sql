@@ -1,18 +1,31 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import {
+  DataTypes,
+  Model,
+  Optional,
+  HasManyCreateAssociationMixin,
+  Association,
+} from "sequelize";
 
 import sequelizeConnection from "../db/index";
 import { IUser } from "../utils/interface";
+import POST from "./PostModel";
 
 type UserCreationAttributes = Optional<IUser, "id">;
 
-class User_Table extends Model<IUser, UserCreationAttributes> {}
+class USERS extends Model<IUser, UserCreationAttributes> {
+  static associate(models: any) {
+    USERS.hasMany(models.POST, {
+      foreignKey: "userId",
+    });
+  }
+}
 
-User_Table.init(
+USERS.init(
   {
     id: {
-      autoIncrement: true,
       primaryKey: true,
       type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
     },
     Name: {
@@ -22,31 +35,50 @@ User_Table.init(
     Email: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: {
+          args: [6, 128],
+          msg: "Email address must be between 6 and 128 characters in length",
+        },
+      },
     },
-    password: {
+    Password: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+        len: [6, 100],
+      },
     },
     PhoneNumber: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     role: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM,
+      values: ["User", "Admin"],
+      defaultValue: "User",
       allowNull: false,
+      validate: {
+        isIn: {
+          args: [["User", "Admin"]],
+          msg: "Invalid role",
+        },
+      },
     },
     // Timestamps
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },
   {
+    // indexes: [{ unique: true, fields: ["Email"] }],
     timestamps: true,
     sequelize: sequelizeConnection,
-    paranoid: true,
+    tableName: "Users",
   }
 );
 
 // This method will create model if the model does not exist, however, if already exist it would overwrite it.
-User_Table.sync();
+USERS.sync();
 
-export default User_Table;
+export default USERS;

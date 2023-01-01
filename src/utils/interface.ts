@@ -1,19 +1,31 @@
+import { Request } from "express";
+
+export enum User_Role {
+  User = "User",
+  Admin = "Admin",
+}
+
 export interface IUser {
-  id: string;
+  id?: string;
   Name: string;
   PhoneNumber: string;
-  role: string;
+  role: User_Role;
   Email: string;
   createdAt: Date;
-  password: string;
+  Password: string;
   updatedAt: Date;
 }
 
 export interface IPost {
+  id: number;
   Topic: string;
-  image: string;
-  viewCount: number;
+  Image: string;
   Body: string;
+  view_Count: number;
   like: string;
-  retweet: string;
+  userId: string;
+}
+
+export interface IGetUserAuthInfoRequest extends Request {
+  user: IUser;
 }

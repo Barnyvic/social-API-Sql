@@ -1,9 +1,9 @@
 import { Router } from "express";
+import { Login, createNewUser } from "../controllers/authControler";
 
-const routes = Router();
+const authroutes = Router();
 
-routes.get("/", (req, res) => {
-  return res.json({ message: "Hello World" });
-});
+authroutes.route("/register").post(createNewUser);
+authroutes.route("/login").get(Login);
 
-export default routes;
+export default authroutes;

@@ -1,46 +1,60 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes, ForeignKey } from "sequelize";
+
 import { IPost } from "../utils/interface";
-import User_Table from "./userModel";
 import sequelizeConnection from "../db";
+import USERS from "./userModel";
 
-class Post_Table extends Model<IPost> {}
+class POST extends Model<IPost> {}
 
-Post_Table.belongsTo(User_Table, {
-  foreignKey: {
-    name: "userId",
-  },
-});
+// this configures the `userId` attribute.
 
-Post_Table.init(
+POST.init(
   {
-    Topic: {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      unique: true,
       allowNull: false,
-      type: DataTypes.STRING,
     },
-    image: {
-      allowNull: true,
+    Topic: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    Image: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     Body: {
-      allowNull: false,
       type: DataTypes.STRING,
+      allowNull: false,
     },
-    viewCount: {
+    view_Count: {
+      type: DataTypes.INTEGER,
       allowNull: true,
-      type: DataTypes.NUMBER,
+      defaultValue: 0,
     },
     like: {
-      allowNull: true,
       type: DataTypes.STRING,
+      allowNull: true,
     },
-    retweet: {
-      allowNull: true,
-      type: DataTypes.STRING,
+    userId: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
     },
   },
-  { timestamps: true, sequelize: sequelizeConnection, paranoid: true }
+  {
+    timestamps: true,
+    sequelize: sequelizeConnection,
+    tableName: "Posts",
+  }
 );
 
-Post_Table.sync();
+POST.belongsTo(USERS, {
+  foreignKey: "userId",
+});
 
-export default Post_Table;
+POST.sync();
+
+export default POST;
