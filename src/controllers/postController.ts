@@ -26,14 +26,13 @@ export const createPost = async (
         new ErrorException(ErrorCode.Unauthenticated, "You are not authorized")
       );
 
-    const post = Post_Table.create({
+    const post = await Post_Table.create({
       Topic: Topic,
       Body: Body,
+      userId: id,
     });
 
-    return successResponse(res, 200, "Success", {
-      post,
-    });
+    return successResponse(res, 200, "Success", post);
   } catch (error) {
     next(new ErrorException(ErrorCode.INTERNAL_SERVER_ERROR, error.message));
   }

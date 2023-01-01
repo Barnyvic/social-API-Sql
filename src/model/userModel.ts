@@ -13,11 +13,8 @@ import POST from "./PostModel";
 type UserCreationAttributes = Optional<IUser, "id">;
 
 class USERS extends Model<IUser, UserCreationAttributes> {
-  declare createProject: HasManyCreateAssociationMixin<POST, "id">;
-
   static associate(models: any) {
     USERS.hasMany(models.POST, {
-      sourceKey: "id",
       foreignKey: "userId",
     });
   }

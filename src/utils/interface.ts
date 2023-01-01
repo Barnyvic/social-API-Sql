@@ -23,6 +23,7 @@ export interface IPost {
   Body: string;
   view_Count: number;
   like: string;
+  userId: string;
 }
 
 export interface IGetUserAuthInfoRequest extends Request {

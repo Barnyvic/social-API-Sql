@@ -1,14 +1,12 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes, ForeignKey } from "sequelize";
 
 import { IPost } from "../utils/interface";
 import sequelizeConnection from "../db";
 import USERS from "./userModel";
 
-class POST extends Model<IPost> {
-  static associate(model: any) {
-    POST.belongsTo(model.USERS);
-  }
-}
+class POST extends Model<IPost> {}
+
+// this configures the `userId` attribute.
 
 POST.init(
   {
@@ -40,6 +38,11 @@ POST.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    userId: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+    },
   },
   {
     timestamps: true,
@@ -47,6 +50,10 @@ POST.init(
     tableName: "Posts",
   }
 );
+
+POST.belongsTo(USERS, {
+  foreignKey: "userId",
+});
 
 POST.sync();
 
