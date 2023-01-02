@@ -36,7 +36,7 @@ export const authMiddleware = async (
   }
 };
 
-const verifyAdmin = async (
+export const verifyAdmin = async (
   req: IGetUserAuthInfoRequest,
   res: Response,
   next: NextFunction

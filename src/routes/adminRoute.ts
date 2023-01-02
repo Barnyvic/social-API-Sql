@@ -1,9 +1,11 @@
 import { Router } from "express";
-import { createNewAdmin, loginAdmin } from "../controllers/adminController";
+import { createNewAdmin, getAllUsers } from "../controllers/adminController";
+import { authMiddleware, verifyAdmin } from "../middleware/authMiddleware";
 
 const adminRouter = Router();
 
 adminRouter.route("/register").post(createNewAdmin);
-adminRouter.route("/login").get(loginAdmin);
+
+adminRouter.route("/getusers").get(authMiddleware, verifyAdmin, getAllUsers);
 
 export default adminRouter;

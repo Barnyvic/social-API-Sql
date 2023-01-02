@@ -5,8 +5,8 @@ import USERS from "../model/userModel";
 import { generateToken } from "../utils/generateToken";
 import { ErrorException } from "../Error-handler/error-exception";
 import { ErrorCode } from "../Error-handler/error-code";
-import { successResponse } from "../utils/response";
 import { User_Role } from "../utils/interface";
+import { successResponse } from "../utils/response";
 
 //@desc Register new Admin
 //@route POST /register
@@ -69,58 +69,27 @@ export const createNewAdmin = async (
   }
 };
 
-//@desc Login Admin
-//@route Get /login
+//@desc getAll users and Role
+//@route Get /getAllUsers
 //@access Private
 
-export const loginAdmin = async (
+export const getAllUsers = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { Email, Password } = req.body;
+    const Users = await (
+      await USERS.findAll()
+    ).map((user) => ({
+      Id: user.dataValues.id,
+      Name: user.dataValues.Name,
+      Email: user.dataValues.Email,
+      Phone: user.dataValues.PhoneNumber,
+      Role: user.dataValues.role,
+    }));
 
-    if (!Email || !Password)
-      return next(
-        new ErrorException(ErrorCode.VALIDATE_ERROR, "Please Fill empty fields")
-      );
-
-    const User = await USERS.findOne({ where: { Email: Email } });
-
-    if (!User)
-      return next(
-        new ErrorException(ErrorCode.NotFound, "User not found pls register")
-      );
-
-    const isPassword = await comparePassword(
-      Password,
-      User?.dataValues.Password
-    );
-
-    if (!isPassword)
-      return next(new ErrorException(ErrorCode.CONFLIT, "incorrect password"));
-
-    const token = await generateToken({
-      id: User?.dataValues.id,
-      email: User?.dataValues.Email,
-    });
-
-    return successResponse(res, 200, "user logged in successfully", {
-      User,
-      token,
-    });
-  } catch (error) {
-    next(new ErrorException(ErrorCode.INTERNAL_SERVER_ERROR, error.message));
-  }
-};
-
-//@desc getAll users and Role
-//@route Get /getAllUsers
-//@access Private
-
-const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
-  try {
+    return successResponse(res, 200, "Suceess", Users);
   } catch (error) {
     next(new ErrorException(ErrorCode.INTERNAL_SERVER_ERROR, error.message));
   }
