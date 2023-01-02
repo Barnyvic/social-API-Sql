@@ -6,6 +6,7 @@ import helmet from "helmet";
 import authroutes from "./routes/routes";
 import postRouter from "./routes/postroutes";
 import errorMiddleware from "./middleware/errorMiddleware";
+import adminRouter from "./routes/adminRoute";
 
 dotenv.config();
 
@@ -26,13 +27,14 @@ class App {
     this.server.use(helmet());
   }
 
-  private initializeErrorhandler() {
-    this.server.use(errorMiddleware);
-  }
-
   routes() {
     this.server.use("/api/auth", authroutes);
     this.server.use("/api/post", postRouter);
+    this.server.use("/api/auth/admin", adminRouter);
+  }
+
+  private initializeErrorhandler() {
+    this.server.use(errorMiddleware);
   }
 }
 
