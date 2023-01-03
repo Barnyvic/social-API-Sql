@@ -48,7 +48,7 @@ export const verifyAdmin = async (
     if (!user.dataValues.role.includes("Admin"))
       return next(
         new ErrorException(
-          ErrorCode.Unauthenticated,
+          ErrorCode.FOBIDDEN_ERROR,
           "You are not allowed to access this resource"
         )
       );

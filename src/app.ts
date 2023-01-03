@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import logger from "morgan";
 import helmet from "helmet";
@@ -18,6 +18,7 @@ class App {
     this.middlewares();
     this.routes();
     this.initializeErrorhandler();
+    this.catchRouteNotFoundHandler();
   }
 
   middlewares() {
@@ -35,6 +36,12 @@ class App {
 
   private initializeErrorhandler() {
     this.server.use(errorMiddleware);
+  }
+
+  catchRouteNotFoundHandler() {
+    this.server.use("*", (req: Request, res: Response) => {
+      return res.status(404).json({ message: "route not found" });
+    });
   }
 }
 

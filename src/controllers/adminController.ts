@@ -94,3 +94,35 @@ export const getAllUsers = async (
     next(new ErrorException(ErrorCode.INTERNAL_SERVER_ERROR, error.message));
   }
 };
+
+//@desc getAll users and Role
+//@route Get /getAllUsers
+//@access Private
+
+export const changeUserRole = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const User = await USERS.findOne({ where: { id: req.params.id } });
+
+    if (!User)
+      return next(
+        new ErrorException(ErrorCode.NotFound, "User not found pls register")
+      );
+
+    const updatedUser = await User.update({
+      role: User_Role.Admin,
+    });
+
+    return successResponse(
+      res,
+      202,
+      "Updated User role Sucessfully",
+      updatedUser
+    );
+  } catch (error) {
+    next(new ErrorException(ErrorCode.INTERNAL_SERVER_ERROR, error.message));
+  }
+};
