@@ -26,6 +26,12 @@ export interface IPost {
   userId: string;
 }
 
+export interface IComment {
+  id: number;
+  postId: IPost;
+  userId: IUser;
+}
+
 export interface IGetUserAuthInfoRequest extends Request {
   user: IUser;
 }

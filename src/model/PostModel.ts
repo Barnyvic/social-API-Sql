@@ -3,8 +3,15 @@ import { Model, DataTypes, ForeignKey } from "sequelize";
 import { IPost } from "../utils/interface";
 import sequelizeConnection from "../db";
 import USERS from "./userModel";
+import COMMENT from "./commentModel";
 
-class POST extends Model<IPost> {}
+class POST extends Model<IPost> {
+  static associate(models: any) {
+    POST.hasMany(models.COMMENT, {
+      foreignKey: "PostId",
+    });
+  }
+}
 
 // this configures the `userId` attribute.
 

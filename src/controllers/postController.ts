@@ -63,6 +63,36 @@ export const viewAllPost = async (
   }
 };
 
+export const viewAPost = async (
+  req: IGetUserAuthInfoRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.user;
+    const user = USERS.findOne({ where: { id: id } });
+    if (!user)
+      return next(
+        new ErrorException(ErrorCode.Unauthenticated, "You are not authorized")
+      );
+
+    await POST.increment({ view_Count: 1 }, { where: { id: req.params.id } });
+
+    const Post = await POST.findOne({
+      where: { id: req.params.id },
+      include: { model: USERS, attributes: ["Name", "PhoneNumber"] },
+      order: [["createdAt", "DESC"]],
+    });
+
+    if (!Post)
+      return next(new ErrorException(ErrorCode.NotFound, "Post not found"));
+
+    return successResponse(res, 200, "Success", Post);
+  } catch (error) {
+    next(new ErrorException(ErrorCode.INTERNAL_SERVER_ERROR, error.message));
+  }
+};
+
 export const uploadPostImage = async (
   req: IGetUserAuthInfoRequest,
   res: Response,
@@ -79,7 +109,8 @@ export const uploadPostImage = async (
 
     const uploadImage = await POST.findOne({ where: { id: req.params.id } });
 
-    console.log(req.file);
+    if (!uploadImage)
+      return next(new ErrorException(ErrorCode.NotFound, "Post was not found"));
 
     const uploadedImg = await uploadImage.update({
       Image: req.file?.path,
@@ -91,6 +122,33 @@ export const uploadPostImage = async (
       "picture uploaded successfully",
       uploadedImg
     );
+  } catch (error) {
+    next(new ErrorException(ErrorCode.INTERNAL_SERVER_ERROR, error.message));
+  }
+};
+
+export const likeAPost = async (
+  req: IGetUserAuthInfoRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = req.body;
+    const user = USERS.findOne({ where: { id: userId } });
+    const post = await POST.findOne({ where: { id: req.params.id } });
+
+    if (post) {
+      await post?.update({
+        like: userId,
+      });
+      return successResponse(res, 200, "The post has been liked");
+    } else if (post?.dataValues.like.includes(userId)) {
+      const postIndex = await post?.dataValues.like;
+
+      const deleteindex = await post?.dataValues.like;
+
+      return successResponse(res, 200, "The post has been disliked");
+    }
   } catch (error) {
     next(new ErrorException(ErrorCode.INTERNAL_SERVER_ERROR, error.message));
   }
