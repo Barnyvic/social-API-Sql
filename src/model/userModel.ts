@@ -9,12 +9,16 @@ import {
 import sequelizeConnection from "../db/index";
 import { IUser } from "../utils/interface";
 import POST from "./PostModel";
+import COMMENT from "./commentModel";
 
 type UserCreationAttributes = Optional<IUser, "id">;
 
 class USERS extends Model<IUser, UserCreationAttributes> {
   static associate(models: any) {
     USERS.hasMany(models.POST, {
+      foreignKey: "userId",
+    });
+    USERS.hasMany(models.COMMENT, {
       foreignKey: "userId",
     });
   }

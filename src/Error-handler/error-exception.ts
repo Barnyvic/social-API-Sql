@@ -16,6 +16,9 @@ export class ErrorException extends Error {
       case ErrorCode.Unauthenticated:
         this.status = 401;
         break;
+      case ErrorCode.FOBIDDEN_ERROR:
+        this.status = 403;
+        break;
       case ErrorCode.NO_CONTENT:
         this.status = 204;
         break;

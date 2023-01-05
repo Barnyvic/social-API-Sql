@@ -7,4 +7,5 @@ export class ErrorCode {
   public static readonly VALIDATE_ERROR = "VALIDATE_ERROR";
   public static readonly CONFLIT = "CONFLIT";
   public static readonly DATABASE_ERROR = "DATABASE_ERROR";
+  public static readonly FOBIDDEN_ERROR = "FOBIDDEN_ERROR";
 }

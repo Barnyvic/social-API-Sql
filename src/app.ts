@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import logger from "morgan";
 import helmet from "helmet";
@@ -6,6 +6,7 @@ import helmet from "helmet";
 import authroutes from "./routes/routes";
 import postRouter from "./routes/postroutes";
 import errorMiddleware from "./middleware/errorMiddleware";
+import adminRouter from "./routes/adminRoute";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ class App {
     this.middlewares();
     this.routes();
     this.initializeErrorhandler();
+    this.catchRouteNotFoundHandler();
   }
 
   middlewares() {
@@ -26,13 +28,20 @@ class App {
     this.server.use(helmet());
   }
 
+  routes() {
+    this.server.use("/api/auth", authroutes);
+    this.server.use("/api/post", postRouter);
+    this.server.use("/api/auth/admin", adminRouter);
+  }
+
   private initializeErrorhandler() {
     this.server.use(errorMiddleware);
   }
 
-  routes() {
-    this.server.use("/api/auth", authroutes);
-    this.server.use("/api/post", postRouter);
+  catchRouteNotFoundHandler() {
+    this.server.use("*", (req: Request, res: Response) => {
+      return res.status(404).json({ message: "route not found" });
+    });
   }
 }
 
